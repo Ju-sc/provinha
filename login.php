@@ -1,6 +1,6 @@
 <?php
 #começando a sessão para processar as ações do usuario e conexão com o banco sql 'aqualert'
-session_start();
+
 require_once "db_migracao.php";
 
 #se o usuario já tiver logado ele será redirecionado no mesmo instante
@@ -13,7 +13,7 @@ if (isset($_SESSION["usuario"])){
 }
 
 #variável que vai guardar as menssagens de erro
-$error = 0;
+$error = " ";
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -22,17 +22,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $senha = md5($_POST["senha"]);
 #identifica se o email tem nos usuarios
+    
 
-}
 if($email !== '' && $senha !== ''){
-    $sql = db()->prepare('SELECT id, nome, tipo FROM usuarios WHERE email = "'.$email.'" AND  senha = "'.$senha.'" AND ativo = 1');
+    $sql = db()->prepare('SELECT id, nome, tipo, senha, email, ativo FROM usuarios WHERE email = "'.$email.'" AND  senha = "'.$senha.'" AND ativo = 1');
     $sql->execute();
     $usuario = $sql->fetch();
-}
+
     if(isset($usuario['id'])){
         unset($_SESSION['usuario']);
         $_SESSION['usuario'] = $usuario;
-    
+        
     switch($usuario['tipo']){
         
         case 'admin':
@@ -48,11 +48,14 @@ if($email !== '' && $senha !== ''){
         break;
     }
 }
+else{
+    $error = "Erro";
+ 
+}
+}
+    
 
-    else{
-        $error = 1;
-    }
-
+}
     
 
 
@@ -66,10 +69,10 @@ if($email !== '' && $senha !== ''){
      ele vai mostrar la na tela de login !-->   
      <h1 style="margin-bottom: 0.2rem; font-size: 1.6rem;">PROVINHA</h1>
      <p style="margin-bottom: 30px; font-size: 0.9rem;"> Acesse sua conta</p>
-        <?php if($error === 1){ ?>
+        <?php if(!empty($error)){ ?>
             <div style="color: red">
-            <span id="msg_erro">Email ou senha incorreto, tente novamente!</span>
-            <?php } $error_login  = 0;?>
+            <?php echo($error);?>
+            <?php } $error  = 0;?>
         </div>
         
     
