@@ -4,54 +4,42 @@ session_start();
 require_once "db_migracao.php";
 
 #se o usuario já tiver logado ele será redirecionado no mesmo instante
-if (isset($_SESSION["id_usuario"])){
-    if ($_SESSION["tipo"] == "user"){
+if (isset($_SESSION["usuario"])){
+    if ($_SESSION["tipo"] == "operador"){
         header("location: login.php");
-    }else if ($_SESSION["tipo"] == "adm"){
-        header("location: admin/home.php");
-    }else if ($_SESSION["tipo"] == "gestor"){
-        header("location: gestor/home.php");
-    }exit;
+    }else if ($_SESSION["tipo"] == "admin"){
+        header("location: admin/admin.php");
+    }
 }
 
 #variável que vai guardar as menssagens de erro
-$erro = "";
+$error_login = 0;
 
 #aqui vai identificar se o formulário foi entregue 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-$email = $_POST["email"];
-$senha = $_POST["senha"];
+if ($_POST) {
+$email = $_POST['email'];
+$senha = md5($_POST['senha']);
 #identifica se o email tem nos usuarios
-$res = mysqli_query($conexao, "SELECT * from usuario where email = '$email'");
 
-#se acha o email ele verifica a senha se está certa e guarda as informações da sessão no banco
-if ($usuario = mysqli_fetch_assoc($res)){
-    if (password_verify($senha, $usuario["senha"])){
+}
+if($email !== '' && $senha !== ''){
+    $sql = db()->prepare('SELECT id, nome, tipo FROM usuarios WHERE email = "'.$email.'" AND  senha = "'.$senha.'" AND ativo = 1');
+    $sql->execute();
+    $usuario = $sql->fetch();
 
-        $_SESSION["id_usuario"] = $usuario["id_usuario"];
-        $_SESSION["nome"] = $usuario["nome"];
-        $_SESSION["email"] = $usuario["email"];
-        $_SESSION["tipo"] = $usuario["tipo"];
+    if(isset($usuario['id'])){
+        unset($_SESSION['usuario']);
+        $_SESSION['usuario'] = $usuario;
 
-#aqui é onde acontece o redirecionamento de tipos de usuarios,
-#user = usuario comum
-#adm = usuario administrador
-#gestor = usuario gerenciador
-
-        if ($_SESSION["tipo"] == "user"){
-            header("location: menu.php");
-        }else if ($_SESSION["tipo"] == "adm"){
-            header("location: admin/home.php");
-        }else if ($_SESSION["tipo"] == "gestor"){
-            header("location: gestor/home.php");
-        }exit;
-        }else{
-            $erro = "Email ou senha inválidos.";
-        }
+        header("Location: menu.php");
+        exit;
     }else{
-            $erro = "Email ou senha inválidos.";
-        }
+        $error_login = 1;
     }
+    
+    
+}
+
 ?>
 <html>
     <head>
@@ -60,8 +48,8 @@ if ($usuario = mysqli_fetch_assoc($res)){
     <body>
      <!--aqui se a variavel de erro estiver com alguma menssagem
      ele vai mostrar la na tela de login !-->   
-     <h1 style="margin-bottom: 0.2rem; font-size: 1.6rem;">Aqualert</h1>
-     <p style="margin-bottom: 30px; font-size: 0.9rem;"> acesse sua conta</p>
+     <h1 style="margin-bottom: 0.2rem; font-size: 1.6rem;">PROVINHA</h1>
+     <p style="margin-bottom: 30px; font-size: 0.9rem;"> Acesse sua conta</p>
         <?php if (!empty($erro)): ?>
             <div style="color: red">
                 <?php echo $erro; ?>
