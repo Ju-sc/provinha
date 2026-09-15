@@ -13,12 +13,14 @@ if (isset($_SESSION["usuario"])){
 }
 
 #variável que vai guardar as menssagens de erro
-$error_login = 0;
+$error = 0;
 
-#aqui vai identificar se o formulário foi entregue 
-if ($_POST) {
-$email = $_POST['email'];
-$senha = md5($_POST['senha']);
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // Receber os dados do formulário
+    $email = $_POST["email"];
+    $senha = md5($_POST["senha"]);
 #identifica se o email tem nos usuarios
 
 }
@@ -26,19 +28,33 @@ if($email !== '' && $senha !== ''){
     $sql = db()->prepare('SELECT id, nome, tipo FROM usuarios WHERE email = "'.$email.'" AND  senha = "'.$senha.'" AND ativo = 1');
     $sql->execute();
     $usuario = $sql->fetch();
-
+}
     if(isset($usuario['id'])){
         unset($_SESSION['usuario']);
         $_SESSION['usuario'] = $usuario;
+    
+    switch($usuario['tipo']){
+        
+        case 'admin':
+            header("Location: admin/admin.php");
+        break;
 
-        header("Location: menu.php");
-        exit;
-    }else{
-        $error_login = 1;
+        case 'operador':
+            header("Location: index.php");
+        break;
+        
+        case 'estoque':
+            header("Location: index.php");
+        break;
     }
-    
-    
 }
+
+    else{
+        $error = 1;
+    }
+
+    
+
 
 ?>
 <html>
@@ -50,10 +66,10 @@ if($email !== '' && $senha !== ''){
      ele vai mostrar la na tela de login !-->   
      <h1 style="margin-bottom: 0.2rem; font-size: 1.6rem;">PROVINHA</h1>
      <p style="margin-bottom: 30px; font-size: 0.9rem;"> Acesse sua conta</p>
-        <?php if (!empty($erro)): ?>
+        <?php if($error === 1){ ?>
             <div style="color: red">
-                <?php echo $erro; ?>
-        <?php endif; ?>
+            <span id="msg_erro">Email ou senha incorreto, tente novamente!</span>
+            <?php } $error_login  = 0;?>
         </div>
         
     
