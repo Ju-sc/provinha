@@ -40,7 +40,7 @@ if($email !== '' && $senha !== ''){
         break;
 
         case 'operador':
-            header("Location: index.php");
+            header("Location: produtos.php");
         break;
         
         case 'estoque':
@@ -50,7 +50,8 @@ if($email !== '' && $senha !== ''){
 }
 else{
     $error = "Erro";
- 
+    echo ($error);
+    die;
 }
 }
     
