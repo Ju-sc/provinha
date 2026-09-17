@@ -10,12 +10,8 @@ if($_POST){
     $pedido_ind = $sql->fetch();
 }
 
-  $limite = 20;
-  $pagina_atual = $_GET['pagina'] ?? 1;
-  $OFFSET = ($pagina_atual - 1) * $limite;
-  $sql = db()->prepare('SELECT COUNT(id) FROM pedidos');                     
-  $sql_count->execute();
-  $total_pedidos = $sql->fetchColumn();
+  
+  
 
   ?>
 <style>
@@ -38,23 +34,12 @@ if($_POST){
                 <h1 class="text-xl font-extrabold text-gray-800">Gerenciar pedidos</h1>
                 <p class="text-sm text-gray-500">Cadastre, edite e organize os pedidos</p>
             </div>
-            <a href="curso_form.html" class="bg-senai-green text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-green-600 transition flex items-center gap-2">
+            <a href="cadastrar.pedido" 1  class="bg-senai-green text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-green-600 transition flex items-center gap-2">
                 + Novo pedido
             </a>
         </div>
 
           
-                                
-                            
-                     
-            <!-- MENSAGEM DE SUCESSO -->
-            <!-- <div class="bg-green-50 border border-green-300 text-green-700 rounded-lg p-3 mb-5 flex items-center gap-2 text-sm">
-                <span class="font-bold text-base">✓</span>
-                <span>Curso excluído com sucesso!</span>
-                <button class="ml-auto text-green-400 hover:text-green-700 text-lg leading-none">×</button>
-            </div> -->
-
-            <!-- TABELA DE CURSOS -->
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                 <table class="w-full text-sm">
                     <thead class="bg-senai-blue text-white">
@@ -68,13 +53,22 @@ if($_POST){
 
                     <?php 
                      
-
+                     $limite = 20;
+  
+                     $sql_count = db()->prepare('SELECT COUNT(id) FROM pedidos');                     
+                     $sql_count->execute();
+                     $total_pedidos = $sql_count->fetchColumn();
                      $total_paginas = ceil($total_pedidos / $limite);
-                     $sql = db()->prepare("SELECT id, status, total FROM pedidos LIMIT $limite OFFSET $offset");
-                     $sql->execute();
-                     $pedido = $sql->fetchAll();
 
-                    foreach($pedido as $u){
+                     $pagina_atual = $_GET['pagina'] ?? 1;
+                        $OFFSET = ($pagina_atual - 1) * $limite;
+
+                    $sql = db()->prepare('SELECT id, status, total FROM pedidos LIMIT ' . $limite . ' OFFSET ' . $OFFSET);                 
+                    $sql->execute();
+                    $pedidos = $sql->fetchAll();
+
+                    
+                    foreach($pedidos as $u){
                     ?>
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-3 text-center text-gray-600 font-semibold"><?=$u["id"];?></td>
@@ -88,16 +82,30 @@ if($_POST){
                     </tbody>
                 </table>
 
-                <!-- RODAPÉ DA TABELA -->
-                <div class="border-t border-gray-100 px-4 py-3 flex items-center justify-between bg-gray-50">
-                    <div class="flex gap-1">
-                        <button class="px-3 py-1 text-xs border border-gray-300 rounded bg-white text-gray-500">← Anterior</button>
-                        <button class="px-3 py-1 text-xs border border-senai-blue rounded bg-senai-blue text-white font-semibold">1</button>
-                        <button class="px-3 py-1 text-xs border border-gray-300 rounded bg-white text-gray-500">Próxima →</button>
-                    </div>
-                </div>
-            </div>
+                <div class="border-t border-gray-100 px-4 py-3 flex items-center justify-center bg-gray-50">
+    <div class="flex gap-1">
+        
+        <?php
+        // O nosso FOR entra exatamente aqui dentro da div do layout!
+        for ($i = 1; $i <= $total_paginas; $i++) {
+            
+            // Verifica se o botão que o PHP está desenhando agora é o da página atual
+            if ($i == $pagina_atual) {
+                // Botão AZUL (Página Ativa)
+                echo "<a href='?pagina=$i' class='px-3 py-1 text-xs border border-senai-blue rounded bg-senai-blue text-white font-semibold'> $i </a>";
+            } else {
+                // Botão BRANCO (Outras Páginas)
+                echo "<a href='?pagina=$i' class='px-3 py-1 text-xs border border-gray-300 rounded bg-white text-gray-500'> $i </a>";
+            }
+            
+        }
+        ?>
 
+    </div>
+
+</div>
+            <div class="flex gap-2 justify-center p-4">
+   
         </div>
     </main>
 

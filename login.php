@@ -13,7 +13,7 @@ if (isset($_SESSION["usuario"])){
 }
 
 #variável que vai guardar as menssagens de erro
-$error = " ";
+$error = 0;
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -36,7 +36,7 @@ if($email !== '' && $senha !== ''){
     switch($usuario['tipo']){
         
         case 'admin':
-            header("Location: admin/admin.php");
+            header("Location: pedidos.php");
         break;
 
         case 'operador':
@@ -44,14 +44,15 @@ if($email !== '' && $senha !== ''){
         break;
         
         case 'estoque':
-            header("Location: index.php");
+            header("Location: pedidos.php");
         break;
     }
 }
 else{
-    $error = "Erro";
-    echo ($error);
-    die;
+    $error = 1;
+    if ($error = 1){
+        $error ="Senha ou email inválido. Tente novamente";
+    }
 }
 }
     
@@ -73,7 +74,7 @@ else{
         <?php if(!empty($error)){ ?>
             <div style="color: red">
             <?php echo($error);?>
-            <?php } $error  = 0;?>
+            <?php } $error = 0;?>
         </div>
         
     
