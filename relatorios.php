@@ -16,8 +16,16 @@ require_once "includes/menu.php";
         <div class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <div>
                 <h1 class="text-xl font-extrabold text-gray-800">Relatório de pedidos</h1>
-                <!-- <p class="text-sm text-gray-500">Cadastre, edite e organize os produtos</p> -->
             </div>
+            <a href="produtos.php" 1  class="bg-senai-green text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-green-600 transition flex items-center gap-2">
+                -> Produtos em estoque
+            </a>
+            <a href="relatorios.php" 1  class="bg-senai-green text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-green-600 transition flex items-center gap-2">
+                -> Pedidos
+            </a>
+            <a href="logout.php" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-2">
+            Sair
+            </a>
         </div>
 
            <div class="bg-white rounded-xl shadow-sm p-6">

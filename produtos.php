@@ -105,6 +105,9 @@ $produtos = $sql->fetchAll();
             <a href="relatorios.php" 1  class="bg-senai-green text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-green-600 transition flex items-center gap-2">
                 -> Relatórios
             </a>
+            <a href="logout.php" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-2">
+            Sair
+            </a>
     </div>
 
     
