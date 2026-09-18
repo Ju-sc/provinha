@@ -54,6 +54,7 @@ if($excluir){
     exit;
 }
 
+//Por causa do fetch(), ele traz um único registro (um array simples).
 $produto_ind = [];
 if($id_produto){
     $sql = db()->prepare('SELECT * FROM produtos WHERE id = '.$id_produto);
@@ -71,6 +72,9 @@ $total_paginas = ceil($total_produtos / $limite);
 $pagina_atual = $_GET['pagina'] ?? 1;
 $OFFSET = ($pagina_atual - 1) * $limite;
 
+
+//Por causa do fetchAll(), a variável $produtos vira uma lista (um array multidimensional). 
+//Ela não tem um nome ou preço direto; ela tem a posição 0, posição 1, posição 2...
 $sql = db()->prepare('SELECT * FROM produtos LIMIT ' . $limite . ' OFFSET ' . $OFFSET);                
 $sql->execute();
 $produtos = $sql->fetchAll();

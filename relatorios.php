@@ -1,7 +1,7 @@
 <?php
 
-require_once "db_migracao   .php";
-// require_once "includes/menu.php";
+require_once "db_migracao.php";
+require_once "includes/menu.php";
 // require_once "includes/item_menu.php";
 
 
