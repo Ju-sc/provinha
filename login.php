@@ -3,6 +3,7 @@
 
 require_once "db_migracao.php";
 
+
 #se o usuario já tiver logado ele será redirecionado no mesmo instante
 if (isset($_SESSION["usuario"])){
     if ($_SESSION["tipo"] == "operador"){
@@ -32,6 +33,8 @@ if($email !== '' && $senha !== ''){
     if(isset($usuario['id'])){
         unset($_SESSION['usuario']);
         $_SESSION['usuario'] = $usuario;
+
+        
         
     switch($usuario['tipo']){
         

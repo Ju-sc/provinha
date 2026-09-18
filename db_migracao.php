@@ -25,5 +25,7 @@ function db_reset(): void {
     //jeito mais simples: re-incluir nao funciona. Vamos so re-criar.
     $GLOBALS['__db_reset_flag'] = true;
 }
+
+session_start();
 ?>
 
